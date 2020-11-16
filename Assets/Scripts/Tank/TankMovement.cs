@@ -75,7 +75,6 @@ public class TankMovement : MonoBehaviour
     {
         Move();
         Turn();
-
     }
 
     private void Move()

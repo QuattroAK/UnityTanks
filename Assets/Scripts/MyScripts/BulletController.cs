@@ -1,44 +1,39 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 
 public class BulletController : MonoBehaviour
 {
+    public event Action<BulletController> OnDisabled;
+
     [Header("Component links")]
     [SerializeField] private float explosionForce;// где лучше их оставить?
     [SerializeField] private float explosionRadius;
     [SerializeField] private Rigidbody rbBullet;
 
-    public Rigidbody RbBullet
-    {
-        get
-        {
-            return rbBullet;
-        }
-    }
+    private Transform startTransform;
 
     private LayerMask tankMask;
     private float maxDamage;
-
-    public event Action<BulletController> OnDisabled;
     
-    public void Init(LayerMask tankMask, float maxDamage)
+    public void Init(Transform startTransform, LayerMask tankMask, float maxDamage)
     {
+        this.startTransform = startTransform;
         this.tankMask = tankMask;
         this.maxDamage = maxDamage;
     }
 
-    public void StartToMove(Transform spawnTransform, Transform parentObject)
+    public void SetVelocity(Vector3 value)
     {
-        transform.parent = parentObject;
-        transform.position = spawnTransform.position;
-        transform.rotation = spawnTransform.rotation;
+        rbBullet.velocity = value;
     }
 
     private void Disable()
     {
         gameObject.SetActive(false);
+        rbBullet.velocity = Vector3.zero;
+        transform.position = startTransform.position;
+        transform.rotation = startTransform.rotation;
+
         OnDisabled?.Invoke(this);
     }
 
@@ -49,7 +44,7 @@ public class BulletController : MonoBehaviour
         for (int i = 0; i < colliders.Length; i++)
         {
             Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody>();
-
+             
             if (!targetRigidbody)
             {
                 continue;
@@ -67,7 +62,10 @@ public class BulletController : MonoBehaviour
             float damage = CalculateDamage(targetRigidbody.position);
             playerHealth.TakeDamage(damage);
             Disable();
+            return;
         }
+
+        Disable();
     }
 
     private float CalculateDamage(Vector3 targetPosition)

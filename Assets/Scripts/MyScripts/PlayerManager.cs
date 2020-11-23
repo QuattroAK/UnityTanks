@@ -27,6 +27,17 @@ public class PlayerManager : MonoBehaviour
         StartCoroutine(SpawnPlayers());
     }
 
+    public void RefreshFixed()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i].gameObject.activeSelf)
+            {
+                players[i].RefreshFixed();
+            }
+        }
+    }
+
     public void Refresh()
     {
         for (int i = 0; i < players.Count; i++)

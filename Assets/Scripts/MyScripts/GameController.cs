@@ -12,9 +12,14 @@ public class GameController : MonoBehaviour
         cameraController.Init(playerManager);
     }
 
+    public void Update()
+    {
+        playerManager.Refresh();
+    }
+
     private void FixedUpdate()
     {
         cameraController.Refresh();
-        playerManager.Refresh();
+        playerManager.RefreshFixed();
     }
 }

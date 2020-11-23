@@ -12,15 +12,15 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Transform fireTransform;
 
     private float chargeSpeed;
-    private float currentLaunchForece;
+    private float currentLaunchForce;
     private string fireButton;
     private bool fired;
 
     public void Init(int playerNumber)
     {
-        currentLaunchForece = minLaunchForce;
+        currentLaunchForce = minLaunchForce;
         aimSlider.value = minLaunchForce;
-        fireButton = $"{"Fire" + playerNumber}";
+        fireButton = $"Fire{playerNumber}";
         chargeSpeed = (maxLaunchForce - minLaunchForce) / maxChargeTime; // ? путь на время
         bulletsController.Init(baseDamage);
     }
@@ -29,20 +29,20 @@ public class PlayerShooting : MonoBehaviour
     {
         aimSlider.value = minLaunchForce;
 
-        if (currentLaunchForece >= maxLaunchForce && !fired)
+        if (currentLaunchForce >= maxLaunchForce && !fired)
         {
-            currentLaunchForece = maxLaunchForce;
+            currentLaunchForce = maxLaunchForce;
             Fire();
         }
         else if (Input.GetButtonDown(fireButton))
         {
             fired = false;
-            currentLaunchForece = minLaunchForce;
+            currentLaunchForce = minLaunchForce;
         }
         else if (Input.GetButton(fireButton) && !fired)
         {
-            currentLaunchForece += chargeSpeed * Time.fixedDeltaTime;
-            aimSlider.value = currentLaunchForece;
+            currentLaunchForce += chargeSpeed * Time.deltaTime;
+            aimSlider.value = currentLaunchForce;
         }
         else if (Input.GetButtonUp(fireButton) && !fired)
         {
@@ -57,8 +57,8 @@ public class PlayerShooting : MonoBehaviour
         if (bullet != null)
         {
             bullet.gameObject.SetActive(true);
+            bullet.SetVelocity(currentLaunchForce * fireTransform.forward);
+            currentLaunchForce = minLaunchForce;
         }
-        bullet.RbBullet.velocity = currentLaunchForece * fireTransform.forward;
-        currentLaunchForece = minLaunchForce;
     }
 }

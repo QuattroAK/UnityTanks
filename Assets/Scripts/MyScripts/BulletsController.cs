@@ -11,19 +11,17 @@ public class BulletsController : MonoBehaviour
 
     private List<BulletController> activePoolShots;
     private Stack<BulletController> diactivePoolShots;
+    private float baseDamage;
 
     public void Init(float baseDamage)
     {
+        this.baseDamage = baseDamage;
         activePoolShots = new List<BulletController>();
         diactivePoolShots = new Stack<BulletController>();
 
         for (int i = 0; i < countPoolObjects; i++)
         {
-            var bulletObject = Instantiate(shotPrefab, shotSpawn.position, shotSpawn.rotation, shotSpawn);
-            bulletObject.Init(tankMask, baseDamage);
-            bulletObject.gameObject.SetActive(false);
-            bulletObject.OnDisabled += BulletDisableHandler;
-            diactivePoolShots.Push(bulletObject);
+            CreateNewBullet();
         }
     }
 
@@ -31,26 +29,29 @@ public class BulletsController : MonoBehaviour
     {
         BulletController bullet;
 
-        if (diactivePoolShots.Count !=0)
+        if (diactivePoolShots.Count != 0)
         {
             bullet = diactivePoolShots.Pop();
             activePoolShots.Add(bullet);
         }
         else
         {
-            bullet = Instantiate(shotPrefab, shotSpawn.position, shotSpawn.rotation, shotSpawn);
+            bullet = CreateNewBullet();
             activePoolShots.Add(bullet);
         }
         return bullet;
     }
 
-    //public BulletController SpawnBullet(Transform parent)
-    //{
+    private BulletController CreateNewBullet()
+    {
+        var bulletObject = Instantiate(shotPrefab, shotSpawn.position, shotSpawn.rotation, shotSpawn);
+        bulletObject.Init(shotSpawn, tankMask, baseDamage);
+        bulletObject.gameObject.SetActive(false);
+        bulletObject.OnDisabled += BulletDisableHandler;
+        diactivePoolShots.Push(bulletObject);
 
-    //    //var bullet = GetBullet();
-    //    //bullet.StartToMove(shotSpawn, parent);
-    //    //return bullet;
-    //}
+        return bulletObject;
+    }
 
     private void BulletDisableHandler(BulletController bullet)
     {

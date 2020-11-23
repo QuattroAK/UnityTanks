@@ -12,9 +12,13 @@ public class PlayerController : MonoBehaviour
         playerShooting.Init(playerNumber);
     }
 
-    public void Refresh()
+    public void RefreshFixed()
     {
         playerMovement.Refresh();
+    }
+
+    public void Refresh()
+    {
         playerShooting.Refresh();
     }
 }

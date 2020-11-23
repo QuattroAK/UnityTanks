@@ -13,8 +13,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void Init(int playerNumber)
     {
-        movementAxisName = "Vertical" + playerNumber;
-        turnAxisName = "Horizontal" + playerNumber;
+        movementAxisName = $"{"Vertical" + playerNumber}";
+        turnAxisName = $"{"Horizontal" + playerNumber}";
     }
 
     public void Refresh()

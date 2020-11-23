@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
     public void Init(PlayerManager playerManager)
     {
         this.playerManager = playerManager;
-        DOVirtual.DelayedCall(0.1f, SetTargets);
+        SetTargets();
     }
 
     public  void Refresh()

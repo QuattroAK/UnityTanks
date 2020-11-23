@@ -5,11 +5,10 @@ using System;
 
 public class PlayerManager : MonoBehaviour
 {
-    [SerializeField] private Transform playersParent;
+    [Header("Component links")]
     [SerializeField] private List<PlayersInfo> playersInfo;
     [SerializeField] private float spawnDelay;
 
-    private CameraController cameraController;
     private Transform[] playerTargets;
     private List<PlayerController> players;
 
@@ -21,10 +20,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void Init(CameraController cameraController)
+    public void Init()
     {
-        this.cameraController = cameraController;
-        GreatPlayersPool();
+        CreatPlayersPool();
         SetCameraTargets();
         StartCoroutine(SpawnPlayers());
     }
@@ -50,13 +48,13 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void GreatPlayersPool()
+    public void CreatPlayersPool()
     {
         players = new List<PlayerController>();
 
         for (int i = 0; i < playersInfo.Count; i++)
         {
-            PlayerController playerController = Instantiate(playersInfo[i].playerPrefab, playersInfo[i].spawnPoint.position, Quaternion.identity, playersParent); // уточнить по созданию объекта как распознает и понимает юнити
+            PlayerController playerController = Instantiate(playersInfo[i].playerPrefab, playersInfo[i].spawnPoint.position, Quaternion.identity); // уточнить по созданию объекта как распознает и понимает юнити
             MeshRenderer[] renderers = playerController.GetComponentsInChildren<MeshRenderer>();
 
             for (int j = 0; j < renderers.Length; j++)

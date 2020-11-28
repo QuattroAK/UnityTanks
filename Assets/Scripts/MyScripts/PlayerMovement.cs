@@ -11,8 +11,12 @@ public class PlayerMovement : MonoBehaviour
     private float movementValue;
     private float turnValue;
 
-    public void Init(int playerNumber)
+    private PlayerController playerController;
+
+    public void Init(PlayerController playerController, int playerNumber)
     {
+        this.playerController = playerController;
+
         movementAxisName = $"Vertical{playerNumber}";
         turnAxisName = $"Horizontal{playerNumber}";
     }
@@ -24,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
 
         Move();
         Turn();
+        PlayMovementSounds();
     }
 
     private void Move()
@@ -37,6 +42,11 @@ public class PlayerMovement : MonoBehaviour
         float turn = turnValue * turnSpeed * Time.fixedDeltaTime;
         Quaternion turnRotation = Quaternion.Euler(0.0f, turn, 0.0f);
         rb.MoveRotation(rb.rotation * turnRotation);
+    }
+
+    private void PlayMovementSounds()
+    {
+        playerController.PlayerSoundController.PlayEngineAudio(movementValue, turnValue);
     }
 
     private void OnEnable()

@@ -5,6 +5,7 @@ using System;
 [RequireComponent(typeof(PlayerHealth))]
 [RequireComponent(typeof(PlayerShooting))]
 [RequireComponent(typeof(PlayerUIController))]
+[RequireComponent(typeof(PlayerSoundController))]
 public class PlayerController : MonoBehaviour
 {
     public event Action OnDamage;
@@ -13,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private PlayerShooting playerShooting;
     [SerializeField] private PlayerUIController playerUIController;
+    [SerializeField] private PlayerSoundController playerSoundController;
 
     #region Properties
 
@@ -20,7 +22,7 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return this; ;
+            return this;
         }
     }
 
@@ -40,14 +42,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public PlayerSoundController PlayerSoundController
+    {
+        get
+        {
+            return playerSoundController;
+        }
+    }
+
     #endregion
 
     public void Init(int playerNumber, Transform parentBullet)
     {
-        playerMovement.Init(playerNumber);
-        playerShooting.Init(playerNumber, parentBullet);
-        playerHealth.Init(OnDamageHandler);
+        playerMovement.Init(this, playerNumber);
+        playerShooting.Init(this, playerNumber, parentBullet);
+        playerHealth.Init(this, OnDamageHandler);
         playerUIController.Init(this);
+        playerSoundController.Init();
     }
 
     public void RefreshFixed()

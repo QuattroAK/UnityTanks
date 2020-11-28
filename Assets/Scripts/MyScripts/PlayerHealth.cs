@@ -10,8 +10,10 @@ public class PlayerHealth : MonoBehaviour
     private event Action OnDamage;
     private float currentHealth;
     private bool Dead;
+    private PlayerController playerController;
 
     #region Properties
+
     public float CurrentHealth
     {
         get
@@ -27,10 +29,12 @@ public class PlayerHealth : MonoBehaviour
             return startingHealth;
         }
     }
+
     #endregion
 
-    public void Init(Action OnDamage)
+    public void Init(PlayerController playerController, Action OnDamage)
     {
+        this.playerController = playerController;
         this.OnDamage += OnDamage;
         currentHealth = startingHealth;
         Dead = false;
@@ -42,8 +46,9 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount;
         OnDamage?.Invoke();
 
-        if (currentHealth <=0.0f && !Dead)
+        if (currentHealth <= 0 && !Dead)
         {
+            playerController.PlayerSoundController.PlaySound(PlayerAudioType.TankDeath);
             OnDeath();
         }
     }
@@ -54,7 +59,6 @@ public class PlayerHealth : MonoBehaviour
         explosionParticles.transform.position = transform.position;
         explosionParticles.gameObject.SetActive(false);
         explosionParticles.Play();
-        // PlayAudio
         gameObject.SetActive(false);
     }
 }

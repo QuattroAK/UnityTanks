@@ -41,8 +41,8 @@ public enum TypeAudio
     TankDeath,
     TankShot,
     ShotCharging,
-    ShellExplosion,
     EngineIdle,
+    ShellExplosion,
     EngineDriving
 }
 

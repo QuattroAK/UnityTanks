@@ -15,9 +15,12 @@ public class PlayerShooting : MonoBehaviour
     private float currentLaunchForce;
     private string fireButton;
     private bool fired;
+    private PlayerController playerController;
 
-    public void Init(int playerNumber, Transform parentBullet)
+    public void Init(PlayerController playerController, int playerNumber, Transform parentBullet)
     {
+        this.playerController = playerController;
+
         currentLaunchForce = minLaunchForce;
         aimSlider.value = minLaunchForce;
         fireButton = $"Fire{playerNumber}";
@@ -36,6 +39,7 @@ public class PlayerShooting : MonoBehaviour
         }
         else if (Input.GetButtonDown(fireButton))
         {
+            playerController.PlayerSoundController.PlaySound(PlayerAudioType.ShotCharging);
             fired = false;
             currentLaunchForce = minLaunchForce;
         }
@@ -61,6 +65,8 @@ public class PlayerShooting : MonoBehaviour
             bullet.gameObject.SetActive(true);
             bullet.SetVelocity(currentLaunchForce * fireTransform.forward);
             currentLaunchForce = minLaunchForce;
+
+            playerController.PlayerSoundController.PlaySound(PlayerAudioType.TankShot);
         }
     }
 }

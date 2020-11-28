@@ -12,7 +12,9 @@ public class PlayerManager : MonoBehaviour
     private Transform parentBullet;
     private Transform[] playerTargets;
     private List<PlayerController> players;
+
     #region Properties
+
     public Transform[] PlayerTargets
     {
         get
@@ -21,11 +23,12 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-#endregion
+    #endregion
+
     public void Init(Transform parentBullet)
     {
         this.parentBullet = parentBullet;
-        CreatPlayersPool();
+        CreatePlayersPool();
         SetCameraTargets();
         StartCoroutine(SpawnPlayers());
     }
@@ -52,29 +55,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public PlayerController GetPlayers()
-    {
-        for (int i = 0; i < players.Count; i++)
-        {
-            if (players[i].gameObject.activeSelf)
-            {
-                return players[i];
-            }
-        }
-        return null;
-    }
-    //public PlayerController GetPlayers()
-    //{
-    //    for (int i = 0; i < players.Count; i++)
-    //    {
-    //        if (players[i].gameObject.activeInHierarchy)
-    //        {
-    //            return players[i];
-    //        }
-    //    }
-    //    return null;
-    //}
-
     public void SetCameraTargets()
     {
         playerTargets = new Transform[players.Count];
@@ -85,7 +65,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void CreatPlayersPool()
+    public void CreatePlayersPool()
     {
         players = new List<PlayerController>();
 

@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour
     {
         playerManager.Init(parentBulletObject);
         cameraController.Init(playerManager);
-        uIController.Init(playerManager);
+        uIController.Init();
     }
 
     public void Update()

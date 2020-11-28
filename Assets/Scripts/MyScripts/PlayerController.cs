@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System;
 
+[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerHealth))]
+[RequireComponent(typeof(PlayerShooting))]
+[RequireComponent(typeof(PlayerUIController))]
 public class PlayerController : MonoBehaviour
 {
     public event Action OnDamage;
@@ -8,8 +12,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private PlayerShooting playerShooting;
+    [SerializeField] private PlayerUIController playerUIController;
 
     #region Properties
+
     public PlayerController playerController
     {
         get
@@ -33,12 +39,15 @@ public class PlayerController : MonoBehaviour
             return playerHealth.StartingHealth;
         }
     }
+
     #endregion
+
     public void Init(int playerNumber, Transform parentBullet)
     {
         playerMovement.Init(playerNumber);
         playerShooting.Init(playerNumber, parentBullet);
         playerHealth.Init(OnDamageHandler);
+        playerUIController.Init(this);
     }
 
     public void RefreshFixed()
@@ -53,6 +62,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDamageHandler()
     {
+        playerUIController.UpdateHealth();
         OnDamage?.Invoke();
     }
 }

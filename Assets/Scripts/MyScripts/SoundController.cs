@@ -1,18 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SoundController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private static SoundController instance;
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private List<AudioItem> audioItems;
+
+    public static SoundController Instance
     {
-        
+        get
+        {
+            return instance;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Init()
     {
-        
+        instance = this;
+    }
+
+    public void PlayAudio(TypeAudio typeAudio)
+    {
+        foreach (var audioItem in audioItems)
+        {
+            if (audioItem.TypeAudio == typeAudio)
+            {
+                audioSource.clip = audioItem.AudioClip;
+            }
+        }
+
+        audioSource.Play();
     }
 }
+
+public enum TypeAudio
+{
+    TankDeath,
+    TankShot,
+    ShotCharging,
+    ShellExplosion,
+    EngineIdle,
+    EngineDriving
+}
+
+[Serializable]
+public class AudioItem
+{
+    public TypeAudio TypeAudio;
+    public AudioClip AudioClip;
+}
+

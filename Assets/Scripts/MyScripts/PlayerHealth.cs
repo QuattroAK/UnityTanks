@@ -1,23 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 
 public class PlayerHealth : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private float startingHealth = 100;
+    //[SerializeField] private GameObject explozionPrefab;
+    [SerializeField] private ParticleSystem explosionParticles;
+
+    private event Action OnDamage;
+    private float currentHealth;
+    private bool Dead;
+
+    #region Properties
+    public float CurrentHealth
     {
-        
+        get
+        {
+            return currentHealth;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public float StartingHealth
     {
-        
+        get
+        {
+            return startingHealth;
+        }
+    }
+    #endregion
+
+    public void Init(Action OnDamage)
+    {
+        this.OnDamage += OnDamage;
+        currentHealth = startingHealth;
+        Dead = false;
+        explosionParticles.gameObject.SetActive(false);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float amount)
     {
+        currentHealth -= amount;
+        OnDamage?.Invoke();
 
+        if (currentHealth <=0.0f && !Dead)
+        {
+            OnDeath();
+        }
+    }
+
+    private void OnDeath()
+    {
+        Dead = true;
+        explosionParticles.transform.position = transform.position;
+        explosionParticles.gameObject.SetActive(false);
+        explosionParticles.Play();
+        // PlayAudio
+        gameObject.SetActive(false);
     }
 }

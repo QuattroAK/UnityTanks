@@ -9,9 +9,10 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private List<PlayersInfo> playersInfo;
     [SerializeField] private float spawnDelay;
 
+    private Transform parentBullet;
     private Transform[] playerTargets;
     private List<PlayerController> players;
-
+    #region Properties
     public Transform[] PlayerTargets
     {
         get
@@ -20,8 +21,10 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void Init()
+#endregion
+    public void Init(Transform parentBullet)
     {
+        this.parentBullet = parentBullet;
         CreatPlayersPool();
         SetCameraTargets();
         StartCoroutine(SpawnPlayers());
@@ -49,6 +52,29 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public PlayerController GetPlayers()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i].gameObject.activeSelf)
+            {
+                return players[i];
+            }
+        }
+        return null;
+    }
+    //public PlayerController GetPlayers()
+    //{
+    //    for (int i = 0; i < players.Count; i++)
+    //    {
+    //        if (players[i].gameObject.activeInHierarchy)
+    //        {
+    //            return players[i];
+    //        }
+    //    }
+    //    return null;
+    //}
+
     public void SetCameraTargets()
     {
         playerTargets = new Transform[players.Count];
@@ -65,7 +91,7 @@ public class PlayerManager : MonoBehaviour
 
         for (int i = 0; i < playersInfo.Count; i++)
         {
-            PlayerController playerController = Instantiate(playersInfo[i].playerPrefab, playersInfo[i].spawnPoint.position, Quaternion.identity); // уточнить по созданию объекта как распознает и понимает юнити
+            PlayerController playerController = Instantiate(playersInfo[i].playerPrefab, playersInfo[i].spawnPoint.position, Quaternion.identity);
             MeshRenderer[] renderers = playerController.GetComponentsInChildren<MeshRenderer>();
 
             for (int j = 0; j < renderers.Length; j++)
@@ -74,7 +100,7 @@ public class PlayerManager : MonoBehaviour
             }
 
             playerController.gameObject.SetActive(false);
-            playerController.Init(playersInfo[i].playerNumber);
+            playerController.Init(playersInfo[i].playerNumber, parentBullet);
             players.Add(playerController);
         }
     }

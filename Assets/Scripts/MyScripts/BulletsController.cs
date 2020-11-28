@@ -9,12 +9,14 @@ public class BulletsController : MonoBehaviour
     [SerializeField] private int countPoolObjects;
     [SerializeField] private LayerMask tankMask;
 
+    private Transform parentBullet;
     private List<BulletController> activePoolShots;
     private Stack<BulletController> diactivePoolShots;
     private float baseDamage;
 
-    public void Init(float baseDamage)
+    public void Init(float baseDamage, Transform parentBullet)
     {
+        this.parentBullet = parentBullet;
         this.baseDamage = baseDamage;
         activePoolShots = new List<BulletController>();
         diactivePoolShots = new Stack<BulletController>();
@@ -44,7 +46,7 @@ public class BulletsController : MonoBehaviour
 
     private BulletController CreateNewBullet()
     {
-        var bulletObject = Instantiate(shotPrefab, shotSpawn.position, shotSpawn.rotation, shotSpawn);
+        var bulletObject = Instantiate(shotPrefab, shotSpawn.position, shotSpawn.rotation, parentBullet);
         bulletObject.Init(shotSpawn, tankMask, baseDamage);
         bulletObject.gameObject.SetActive(false);
         bulletObject.OnDisabled += BulletDisableHandler;

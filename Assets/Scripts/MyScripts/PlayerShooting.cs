@@ -16,13 +16,13 @@ public class PlayerShooting : MonoBehaviour
     private string fireButton;
     private bool fired;
 
-    public void Init(int playerNumber)
+    public void Init(int playerNumber, Transform parentBullet)
     {
         currentLaunchForce = minLaunchForce;
         aimSlider.value = minLaunchForce;
         fireButton = $"Fire{playerNumber}";
         chargeSpeed = (maxLaunchForce - minLaunchForce) / maxChargeTime; // ? путь на время
-        bulletsController.Init(baseDamage);
+        bulletsController.Init(baseDamage, parentBullet);
     }
 
     public void Refresh()
@@ -56,6 +56,8 @@ public class PlayerShooting : MonoBehaviour
         var bullet = bulletsController.GetBullet();
         if (bullet != null)
         {
+            bullet.transform.position = fireTransform.position;
+            bullet.transform.rotation = fireTransform.rotation;
             bullet.gameObject.SetActive(true);
             bullet.SetVelocity(currentLaunchForce * fireTransform.forward);
             currentLaunchForce = minLaunchForce;
